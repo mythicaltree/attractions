@@ -1,0 +1,48 @@
+name: Suggest auto-releasing
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+    paths:
+      - 'package.json'
+
+jobs:
+  tag-issue:
+    name: Tag the PR with [new release] if needed
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Add the [new release] tag 🔖
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const package = require(`${process.env.GITHUB_WORKSPACE}/package.json`);
+            const currentVersion = `v${package.version}`;
+            const tags = (await github.repos.listTags({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })).data;
+            if (tags.find(tag => tag.name === currentVersion) == null) {
+              await github.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: ['new release'],
+              });
+              await github.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: (
+                  'This pull request will automatically trigger a release on merge!\n'
+                  + 'If it shouldn\'t, remove the [new release] label.'
+                ),
+              });
+            }

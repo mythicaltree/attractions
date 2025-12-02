@@ -1,0 +1,158 @@
+---
+name: Automate
+---
+
+<script lang="ts">
+  import { Accordion, AccordionSection, Button, Card} from '$lib';
+  import { ChevronDownIcon } from 'svelte-feather-icons';
+  import { base } from '$app/paths';
+</script>
+
+# Автопереключение SIM-карт
+
+В случае перебоев со связью, двухсимочный LTE/4G модем автоматически переключается на резервную сим-карту.
+
+## Настройка пользователем
+
+### Список параметров
+
+| Название | По умолчанию | Аннотация |
+| -------- | ------------ | ----------- |
+| **`Уровень сигнала`** | `30%` | Минимальный уровень сигнала до базовой станции сотового опрератора |
+| **`Минимальный баланс`** | `50р` | Минимальная сумма денежных средств на балансе SIM-карты |
+
+
+
+<div>
+<Accordion let:closeOtherPanels>
+  <AccordionSection on:panel-open={closeOtherPanels} let:toggle>
+    <div slot="handle">
+      <Button on:click={toggle}>
+        Как найти на устройстве
+        <ChevronDownIcon size="20" class="ml accordion-chevron" />
+      </Button>
+    </div>
+    
+    <Card outline tight=true style="width: 600px">
+      <img alt="sim settings" width="600px" src="{base}/sim_setting.png" />
+    </Card>
+
+  </AccordionSection>
+</Accordion>
+</div>
+
+
+
+
+<section class="accordion" aria-label="FAQ">
+
+  <details name="faq" open>
+      
+    <summary class='btn'>
+      Как найти на устройстве
+      <span class="caret" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+      class="">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+    </span>  
+    </summary>
+    
+    
+    <div class="panel">
+      <Card outline tight=true style="width: 600px">
+      <img alt="sim settings" width="600px" src="{base}/sim_setting.png" />
+    </Card>
+    </div>
+  </details>
+
+</section>
+
+<style>
+
+.btn {
+  border-radius: 1.5625em;
+  display: flex;
+  align-items: center;
+}
+
+.accordion {
+  --radius: .5rem;
+  --bg: none;
+  --bg-hover: #F9F7FD;
+  --bg-active: #F9F7FD;
+  --text: #4300b0;
+}
+
+.accordion details {
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+.accordion details + details {
+  margin-top: .5rem;
+}
+
+/* маркер у summary */
+.accordion summary {
+  list-style: none;
+  cursor: pointer;
+  padding: .75rem 1rem;
+  font: 600 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+}
+
+.accordion summary::marker,
+.accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+/* свой «маркер» иконкой */
+.accordion summary .caret {
+  inline-size: 1rem;
+  block-size: 1rem;
+  display: inline-block;
+  margin-inline-end: .5rem;
+  transition: transform .s ease;
+  vertical-align: -2px;
+}
+
+.caret {
+padding: 5px;
+}
+
+/* подсветка активной шапки и поворот стрелки */
+.accordion details[open] > summary {
+  background: var(--bg-active);
+}
+
+.accordion details[open] > summary .caret {
+  transform: rotate(-180deg);
+}
+
+/* hover и фокус для доступности */
+.accordion summary:hover {
+  background: var(--bg-hover);
+}
+
+.accordion summary:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: calc(var(--radius) - 2px);
+}
+
+/* стили на уровне контейнера через :has() */
+.accordion:has(> details[open]) {
+  --stroke: #d4e2ff;
+}
+
+/* «приглушить» неактивные пункты, когда какой-то открыт */
+.accordion:has(> details[open]) > details:not([open]) {
+  opacity: .85;
+}
+
+
+
+</style>
+ 

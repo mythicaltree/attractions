@@ -1,0 +1,12 @@
+---
+name: Automate
+---
+
+<script>
+
+import Automate from '#root/AUTOMATE.md';
+
+</script>
+
+<Automate />
+

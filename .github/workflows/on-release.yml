@@ -1,0 +1,69 @@
+name: Post-release chores
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy-docs:
+    name: Deploy docs to GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Set up Node 16 📦
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'pnpm'
+
+      - name: Install pnpm 🧰
+        uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7.5.0
+
+      - name: Build docs 🔧
+        run: |
+          pnpm install
+          pnpm run build
+
+      - name: Publish 🚀
+        uses: peaceiris/actions-gh-pages@bbdfb200618d235585ad98e965f4aafc39b4c501
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build
+          force_orphan: true
+
+  release:
+    name: Release to npm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Install pnpm 🧰
+        uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7.5.0
+
+      - name: Set up Node 16 📦
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+
+      - name: Build bundles 🔧
+        run: |
+          pnpm install
+          pnpm run package
+
+      - name: Release 🚀
+        working-directory: package
+        run: pnpm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
