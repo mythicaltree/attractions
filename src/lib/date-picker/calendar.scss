@@ -13,7 +13,7 @@ $side-padding: 1rem;
 
   > .weekday {
     text-align: center;
-    width: percentage(math.div(1, 7));
+    width: math.percentage(math.div(1, 7));
   }
 }
 
@@ -25,7 +25,7 @@ $side-padding: 1rem;
     display: flex;
     justify-content: center;
     position: relative;
-    width: percentage(math.div(1, 7));
+    width: math.percentage(math.div(1, 7));
 
     &:last-child {
       padding-right: $side-padding;
