@@ -1,0 +1,9 @@
+---
+name: Роутер Bitcord RTR-4
+---
+
+<script>
+  import AboutRtr4 from '#root/ABOUT-RTR-4.md';
+</script>
+
+<AboutRtr4 />

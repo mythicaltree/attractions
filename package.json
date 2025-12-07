@@ -41,7 +41,11 @@
     "prettier": "^2.8.1",
     "prettier-plugin-svelte": "^2.9.0",
     "remark-heading-id": "^1.0.0",
+<<<<<<< HEAD
     "sass": "^1.57.1",
+=======
+    "sass": "^1.94.2",
+>>>>>>> anna/main
     "stylelint": "^14.16.1",
     "stylelint-config-prettier": "^9.0.4",
     "stylelint-config-sass-guidelines": "^9.0.1",

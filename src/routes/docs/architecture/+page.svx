@@ -1,0 +1,9 @@
+---
+name: Architecture
+---
+
+<script>
+  import Architecture from '#root/ARCHITECTURE.md';
+</script>
+
+<Architecture />

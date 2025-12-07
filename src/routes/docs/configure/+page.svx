@@ -1,0 +1,135 @@
+---
+name: Configure
+---
+
+<script>
+  import { CheckboxGroup, Checkbox, Button, Modal, Dialog } from '$lib';
+  import { Accordion, AccordionSection, Card } from '$lib';
+  import { CheckIcon, AlertTriangleIcon } from 'svelte-feather-icons';
+  import { ChevronDownIcon } from 'svelte-feather-icons';
+
+  const basic = [
+    { value: 'osbase', label: 'OpenWrt-22-03', checked: true,disabled: true },
+    { value: 'luci', label: 'Web-интерфейс', checked: true,disabled: true  },
+    { value: 'tsmodem', label: 'Сервис управления GSM-модемом', checked: true,disabled: true  },
+    { value: 'tsmsms', label: 'Сервис приёма/передачи SMS', checked: true,disabled: true  },
+    { value: 'tsmstm', label: 'Сервис управления микроконтролером', checked: true,disabled: true  },
+    { value: 'applogic', label: 'Сервис основной логики работы прибора', checked: true,disabled: true  },
+  ];
+
+  const sms_extra = [
+    { value: 'sms-comm', label: 'Отправка команд роутеру по SMS', checked: true, },
+    { value: 'sms-send', label: 'Отправка произвольных SMS из веб-интерфейса' },
+  ];
+
+
+  const phys = [
+    { value: 'gpio', label: 'GPIO (управляемый через веб-интерфейс)' },
+    { value: 'rs232', label: 'RS-232 (управляемый через веб-интерфейс)', checked: true, },
+    { value: 'rs485', label: 'RS-485 (управляемый через веб-интерфейс)' },
+  ];
+
+  const net = [
+    { value: 'pptp', label: 'PPTP Client' },
+    { value: 'l2tp', label: 'L2TPv2 Client' },
+    { value: 'openvpn', label: 'OpenVPN tunnel' },
+    { value: 'gre', label: 'GRE tunnels' },
+    { value: 'dmvpn', label: 'DMVPN / NHRP tunnels' },
+    { value: 'eoip', label: 'EoIP tunnels' },
+    { value: 'l2tpv3', label: 'L2TPv3 tunnels' },
+    { value: 'ipsec', label: 'IPSec tunnels' },
+    { value: 'vrrp', label: 'VRRP' },
+    { value: 'dyndns', label: 'DynDNS client' },
+    { value: 'snmp', label: 'SNMP' },
+    { value: 'gnss', label: 'GNSS' },
+    { value: 'ppp', label: 'PPP' },
+    { value: 'icmp', label: 'ICMP' },
+    { value: 'ssh', label: 'SSH', checked: true },
+    { value: 'telnet', label: 'Telnet' },
+    { value: 'tinyproxy', label: 'TinyProxy' },
+    { value: 'zabbix', label: 'Zabbix-агент' },
+    { value: 'ssmtp', label: 'SSMTP (отправка Email из роутера)' },
+  ];
+
+  let confModal = false;
+
+</script>
+
+
+  <style lang="scss">
+  :global(.checkbox-config) {
+    margin-bottom: 0.5em;
+  }
+  :global(.configure-card) {
+    margin: 2.5em;
+  }
+</style>
+
+
+
+# Конфигуратор прошивок роутера Bitcord RTR-3
+
+Роутер включает в себя более 50 различных опций. Вероятно, не все из них необходимы для конкретного прикладного применения.
+
+Данный онлайн конфигуратор позволяет включить в прошивку только необходимый набор, выиграв таким образом свободные ресурсы прибора.
+
+### Следующие опции можно включить / исключить из прошивки:
+
+  <Card outline class="configure-card">
+      <h3>Базовые опции</h3>
+      <CheckboxGroup name="rtr3_items1[]" items={basic} checkboxClass="checkbox-config" />
+  </Card>
+  <Card outline class="configure-card">
+      <h3>Расширенные SMS-опции (обязательно):</h3>
+      <CheckboxGroup name="rtr3_items2[]" items={sms_extra} checkboxClass="checkbox-config" />
+      <h3>Периферия:</h3>
+      <CheckboxGroup name="rtr3_items3[]" items={phys} checkboxClass="checkbox-config" />
+      <h3>Сетевые опции:</h3>
+      <CheckboxGroup name="rtr3_items4[]" items={net} checkboxClass="checkbox-config" />
+  </Card>
+
+  <Card outline class="configure-card">
+
+    <Button filled on:click={() => confModal = true}>
+      <CheckIcon size="20" class="mr" />
+      Сгенерировать
+    </Button>
+
+  </Card>
+
+
+  <Modal bind:open={confModal} let:closeCallback>
+    <Dialog title="Сгенерировать прошивку" {closeCallback}>
+      <div slot="title-icon">
+        <AlertTriangleIcon size="25" />
+      </div>
+      <p>Файл прошивки, который Вы вскоре получите, необходимо загрузить на устройство через веб-интерфейс:</p>
+      <table>
+        <tr>
+          <td valign="bottom">
+            <Button filled disabled>Сгенерировать</Button>
+          </td>
+          <td valign="top">
+
+            <Accordion let:closeOtherPanels>
+              <AccordionSection on:panel-open={closeOtherPanels} let:toggle>
+                <div slot="handle">
+                  <Button on:click={toggle}>
+                    Как прошить устройство через Web-панель
+                    <ChevronDownIcon size="20" class="ml accordion-chevron" />
+                  </Button>
+                </div>
+                
+                <Card outline tight=true style="width: 900px">
+                  <img alt="sim settings" width="900px" src="/upgrade_rtr3_web.png" />
+                </Card>
+              </AccordionSection>
+            </Accordion>
+
+
+          </td>
+        </tr>
+      </table>
+    </Dialog>
+  </Modal>   
+

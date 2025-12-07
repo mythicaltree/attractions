@@ -1,0 +1,11 @@
+---
+name: Home
+---
+
+<script>
+
+import Welcome from '#root/WELCOME.md';
+
+</script>
+
+<Welcome />
